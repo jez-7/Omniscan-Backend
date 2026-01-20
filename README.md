@@ -27,7 +27,8 @@ Omniscan-Backend es una solución de infraestructura robusta diseñada para el e
 - Persistencia: En caso de detectar cambios significativos, se actualiza el estado en el caché y se registra el histórico en MongoDB.
 
 - Consumo: El backend expone una API REST lista para ser consumida por un frontend en Angular.
+  
 
-💡 Valor Técnico
+💡 Valor Técnico:
 
 Este proyecto refleja la capacidad de integrar servicios complejos y manejar flujos de datos asincrónicos, demostrando un dominio avanzado en el ecosistema de Java y la gestión de infraestructuras basadas en contenedores
