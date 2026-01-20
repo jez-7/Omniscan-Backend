@@ -5,7 +5,7 @@ Omniscan-Backend es una solución de infraestructura robusta diseñada para el e
 
 🛠️ Stack Tecnológico
 
-- Java 21 & Spring Boot 3: Implementación de Virtual Threads (Project Loom) para un manejo de concurrencia de alto rendimiento.
+- Java 21 & Spring Boot 4: Implementación de Virtual Threads (Project Loom) para un manejo de concurrencia de alto rendimiento.
   
 - Apache Kafka: Motor central para el streaming de eventos de precios y desacoplamiento de servicios.
 
@@ -27,6 +27,7 @@ Omniscan-Backend es una solución de infraestructura robusta diseñada para el e
 - Persistencia: En caso de detectar cambios significativos, se actualiza el estado en el caché y se registra el histórico en MongoDB.
 
 - Consumo: El backend expone una API REST lista para ser consumida por un frontend en Angular.
+  
   
 
 💡 Valor Técnico:
