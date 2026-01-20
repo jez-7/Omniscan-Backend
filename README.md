@@ -14,7 +14,7 @@ Omniscan-Backend es una solución de infraestructura robusta diseñada para el e
 - MongoDB: Almacenamiento NoSQL para persistir el historial de variaciones de precios con esquemas flexibles.
 
 - Docker & Docker Compose: Orquestación completa de la infraestructura (Kafka, Mongo, Redis) para entornos de desarrollo y producción replicables.
-+1
+
 
 - JUnit 5 & Mockito: Suite de testing integral para asegurar la calidad del código y la lógica de negocio.
 
