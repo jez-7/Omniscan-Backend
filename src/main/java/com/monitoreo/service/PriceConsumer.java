@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -23,28 +24,36 @@ public class PriceConsumer {
     @KafkaListener(topics = "prices-topic", groupId = "price-monitor-group")
     public void consumePriceEvent(PriceEvent event) {
 
-        String redisKey = "product:price:" + event.getProductId();
+        String redisKey = "product:window:" + event.getProductId();
 
-        // precio anterior de Redis
-        String lastPriceStr = redisTemplate.opsForValue().get(redisKey);
-        Double lastPrice = (lastPriceStr != null) ? Double.valueOf(lastPriceStr) : Double.MAX_VALUE;
+        redisTemplate.opsForList().leftPush(redisKey, event.getPrice().toString());
 
-        //  si precio actual es menor al de redis, se guarda en db
-       if (event.getPrice() < lastPrice) {
-            log.info("🎯 ¡Oferta! {} bajó a ${}", event.getProductName(), event.getPrice());
+        redisTemplate.opsForList().trim(redisKey, 0, 9); // mantener solo los últimos 10 precios
 
-            PriceHistory history = new PriceHistory();
-            history.setProductId(event.getProductId());
-            history.setPrice(event.getPrice());
-            history.setTimestamp(new Date());
-            priceRepository.save(history);
+        // se obtiene todos los precios de la ventana y se calcula promedio
+        List<String> prices = redisTemplate.opsForList().range(redisKey, 0, -1);
 
-            // actualiza redis con el nuevo precio
-            redisTemplate.opsForValue().set(redisKey, event.getPrice().toString());
+        if (prices != null && !prices.isEmpty()) {
 
-        } else {
-           log.debug("No hay cambios para {}", event.getProductName() );
+            double average = prices.stream()
+                    .mapToDouble(Double::parseDouble)
+                    .average()
+                    .orElse(0.0);
 
+            log.info("📊 Producto: {} | Actual: ${} | Promedio Ventana: ${}",
+                    event.getProductName(), event.getPrice(), String.format("%.2f", average));
+
+            // si el precio es un 5% menor al promedio se guarda la oferta
+            if (event.getPrice() < (average * 0.95)) {
+                log.info("🎯 ¡OFERTA POR VOLATILIDAD DETECTADA!");
+
+                PriceHistory history = new PriceHistory();
+                history.setProductId(event.getProductId());
+                history.setPrice(event.getPrice());
+                history.setTimestamp(new Date());
+
+                priceRepository.save(history); // se persiste en db
+            }
         }
     }
 
