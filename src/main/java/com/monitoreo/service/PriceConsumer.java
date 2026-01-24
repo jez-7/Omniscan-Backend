@@ -21,13 +21,12 @@ public class PriceConsumer {
     @Autowired
     private PriceRepository priceRepository;
 
-    @KafkaListener(topics = "prices-topic", groupId = "price-monitor-group")
+    @KafkaListener(topics = "prices-topic", groupId = "${spring.kafka.consumer.group-id}")
     public void consumePriceEvent(PriceEvent event) {
 
         String redisKey = "product:window:" + event.getProductId();
 
         redisTemplate.opsForList().leftPush(redisKey, event.getPrice().toString());
-
         redisTemplate.opsForList().trim(redisKey, 0, 9); // mantener solo los últimos 10 precios
 
         // se obtiene todos los precios de la ventana y se calcula promedio
@@ -40,19 +39,25 @@ public class PriceConsumer {
                     .average()
                     .orElse(0.0);
 
-            log.info("📊 Producto: {} | Actual: ${} | Promedio Ventana: ${}",
+            log.info("📊 Item: {} | Actual: ${} | Promedio: ${}",
                     event.getProductName(), event.getPrice(), String.format("%.2f", average));
 
-            // si el precio es un 5% menor al promedio se guarda la oferta
+            // si el precio es un 5% menor al promedio se guarda en db
             if (event.getPrice() < (average * 0.95)) {
-                log.info("🎯 ¡OFERTA POR VOLATILIDAD DETECTADA!");
+                log.info("🎯 ¡OFERTA DETECTADA!\"");
 
                 PriceHistory history = new PriceHistory();
                 history.setProductId(event.getProductId());
+                history.setProductName(event.getProductName());
                 history.setPrice(event.getPrice());
+                history.setPermalink(event.getPermalink());
+                history.setThumbnail(event.getThumbnail());
                 history.setTimestamp(new Date());
 
                 priceRepository.save(history); // se persiste en db
+
+                // agregar despues las notis a telegram
+                // sendTelegramNotification(history);
             }
         }
     }

@@ -14,4 +14,7 @@ public class PriceHistory {
     private String productId;
     private Double price;
     private Date timestamp;
+    private String permalink;
+    private String thumbnail;
+    private String productName;
 }
