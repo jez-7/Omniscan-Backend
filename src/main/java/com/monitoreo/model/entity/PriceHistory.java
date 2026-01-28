@@ -1,4 +1,4 @@
-package com.monitoreo.model;
+package com.monitoreo.model.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

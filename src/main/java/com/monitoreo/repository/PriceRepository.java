@@ -1,6 +1,6 @@
 package com.monitoreo.repository;
 
-import com.monitoreo.model.PriceHistory;
+import com.monitoreo.model.entity.PriceHistory;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

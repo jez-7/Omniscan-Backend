@@ -1,4 +1,4 @@
-package com.monitoreo.model;
+package com.monitoreo.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

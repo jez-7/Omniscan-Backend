@@ -1,6 +1,6 @@
 package com.monitoreo.controller;
 
-import com.monitoreo.model.PriceHistory;
+import com.monitoreo.model.entity.PriceHistory;
 import com.monitoreo.repository.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
