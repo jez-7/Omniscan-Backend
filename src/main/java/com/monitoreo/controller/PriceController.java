@@ -15,12 +15,12 @@ public class PriceController {
     @Autowired
     private PriceRepository priceRepository;
 
-    @GetMapping
+    @GetMapping(version = "1")
     public List<PriceHistory> getAllPrices() {
         return priceRepository.findAll();
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping(value = "/{productId}", version = "1")
     public List<PriceHistory> getPricesByProduct(@PathVariable String productId) {
         return priceRepository.findAll().stream()
                 .filter(p -> p.getProductId().equals(productId))
