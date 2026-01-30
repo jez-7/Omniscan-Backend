@@ -21,6 +21,9 @@ public class PriceConsumer {
     @Autowired
     private PriceRepository priceRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @KafkaListener(topics = "prices-topic", groupId = "${spring.kafka.consumer.group-id}")
     public void consumePriceEvent(PriceEvent event) {
 
@@ -54,10 +57,13 @@ public class PriceConsumer {
                 history.setThumbnail(event.getThumbnail());
                 history.setTimestamp(new Date());
 
-                priceRepository.save(history); // se persiste en db
+                priceRepository.save(history);
 
-                // agregar despues las notis a telegram
-                // sendTelegramNotification(history);
+                notificationService.sendTelegramAlert(
+                        event.getProductName(),
+                        event.getPrice(),
+                        event.getPermalink()
+                );
             }
         }
     }
