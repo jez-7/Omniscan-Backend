@@ -11,6 +11,8 @@ HELP.md
 .springBeans
 .sts4-cache
 
+# ENV
+.env
 
 # Created by https://www.gitignore.io/api/git,java,maven,eclipse,windows
 

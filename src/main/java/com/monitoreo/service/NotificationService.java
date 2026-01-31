@@ -1,6 +1,7 @@
 package com.monitoreo.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -10,8 +11,11 @@ public class NotificationService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final String BOT_TOKEN = "8472322355:AAFBB05KV7zLnvuXpfAdNaUo0PtyDFvt3MI";
-    private final String CHAT_ID = "7840114804";
+    @Value("${telegram.bot.token}")
+    private String BOT_TOKEN;
+
+    @Value("${telegram.chat.id}")
+    private String CHAT_ID;
 
     public void sendTelegramAlert(String productName, Double price, String link) {
         String text = String.format(
