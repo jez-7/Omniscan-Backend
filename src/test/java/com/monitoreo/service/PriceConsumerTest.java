@@ -29,6 +29,9 @@ public class PriceConsumerTest {
     @Mock
     private PriceRepository priceRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private PriceConsumer priceConsumer;
 
@@ -46,6 +49,7 @@ public class PriceConsumerTest {
 
         verify(priceRepository, times(1)).save(any(PriceHistory.class));
 
+        verify(notificationService, times(1)).sendTelegramAlert(anyString(), anyDouble(), anyString());
 
     }
 
