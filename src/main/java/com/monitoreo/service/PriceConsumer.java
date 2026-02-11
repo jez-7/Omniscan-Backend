@@ -3,6 +3,7 @@ package com.monitoreo.service;
 import com.monitoreo.model.dto.PriceEvent;
 import com.monitoreo.model.entity.PriceHistory;
 import com.monitoreo.repository.PriceRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -13,16 +14,14 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PriceConsumer {
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    @Autowired
-    private PriceRepository priceRepository;
+    private final PriceRepository priceRepository;
 
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @KafkaListener(topics = "prices-topic", groupId = "${spring.kafka.consumer.group-id}")
     public void consumePriceEvent(PriceEvent event) {
