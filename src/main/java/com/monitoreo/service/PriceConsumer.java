@@ -42,12 +42,12 @@ public class PriceConsumer {
                     .average()
                     .orElse(0.0);
 
-            log.info("📊 Item: {} | Actual: ${} | Promedio: ${}",
+            log.info("Item: {} | Actual: ${} | Promedio: ${}",
                     event.getProductName(), event.getPrice(), String.format("%.2f", average));
 
             // si el precio es un 5% menor al promedio se guarda en db
             if (event.getPrice() < (average * 0.95)) {
-                log.info("🎯 ¡OFERTA DETECTADA!\"");
+                log.info(" ---- ¡OFERTA DETECTADA! ----\"");
 
                 PriceHistory history = new PriceHistory();
                 history.setProductId(event.getProductId());

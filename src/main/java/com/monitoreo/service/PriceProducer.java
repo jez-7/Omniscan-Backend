@@ -23,7 +23,7 @@ public class PriceProducer {
 
     @Scheduled(fixedRate = 6000)
     public void fetchAndSimulateVolatility() {
-        log.info("🌐 Escaneando mercado...");
+        log.info("Escaneando mercado...");
 
         try {
 
@@ -48,7 +48,7 @@ public class PriceProducer {
                             System.currentTimeMillis()
                     );
 
-                    log.info("📢 Precio detectado para {}: ${}",
+                    log.info("Precio detectado para {}: ${}",
                             event.getProductName(), String.format("%.2f", event.getPrice()));
 
                     kafkaTemplate.send(TOPIC, event.getProductId(), event);

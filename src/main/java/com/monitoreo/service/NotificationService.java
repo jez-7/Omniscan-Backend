@@ -33,9 +33,9 @@ public class NotificationService {
 
         try {
             restTemplate.getForObject(url, String.class);
-            log.info("✅ Notificación enviada a Telegram para el producto: {}", productName);
+            log.info("Notificación enviada a Telegram para el producto: {}", productName);
         } catch (Exception e) {
-            log.error("❌ Error al enviar notificación a Telegram: {}", e.getMessage());
+            log.error("Error al enviar notificación a Telegram: {}", e.getMessage());
         }
 
 
