@@ -31,3 +31,9 @@ Omniscan es un motor de monitoreo de precios de alta frecuencia diseñado bajo u
 - Clean Architecture: Separación clara de responsabilidades entre servicios de notificación, productores y consumidores.
 
 - Variables de Entorno: Configuración preparada para despliegue en contenedores mediante application.properties dinámicos.
+
+# 🚀 Metricas SonarQube Cloud
+
+![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=jez-7_Omniscan-Backend&metric=alert_status)
+![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jez-7_Omniscan-Backend&metric=coverage)
+![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jez-7_Omniscan-Backend&metric=sqale_rating)
