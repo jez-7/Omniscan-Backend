@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PriceController.class)
 public class PrinceControllerTest {
 
-    @Autowired
+        @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean

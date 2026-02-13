@@ -4,6 +4,7 @@ import com.monitoreo.model.entity.PriceHistory;
 import com.monitoreo.repository.PriceRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/prices")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @Tag(name = "Precios", description = "Endpoints para consultar el historial de ofertas detectadas")
 public class PriceController {
 
-    @Autowired
-    private PriceRepository priceRepository;
+    private final PriceRepository priceRepository;
 
     @Operation(summary = "Obtener todas las ofertas detectadas", description = "Devuelve una lista con el historial completo de ofertas detectadas")
     @GetMapping
