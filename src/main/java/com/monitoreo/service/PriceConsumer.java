@@ -3,6 +3,8 @@ package com.monitoreo.service;
 import com.monitoreo.model.dto.PriceEvent;
 import com.monitoreo.model.entity.PriceHistory;
 import com.monitoreo.repository.PriceRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Servicio encargado de procesar los eventos de precios recibidos desde Kafka.
+ * Realiza el cálculo de promedios móviles usando Redis y determina si existe una oferta.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +29,12 @@ public class PriceConsumer {
 
     private final NotificationService notificationService;
 
+    /**
+     * Método que consume los eventos de precios desde el tópico de Kafka.
+     * Almacena los precios en Redis para calcular el promedio móvil y detecta ofertas.
+     *
+     * @param event El evento de precio recibido desde Kafka.
+     */
     @KafkaListener(topics = "prices-topic", groupId = "${spring.kafka.consumer.group-id}")
     public void consumePriceEvent(PriceEvent event) {
 
@@ -48,13 +60,14 @@ public class PriceConsumer {
             if (event.getPrice() < (average * 0.95)) {
                 log.info(" ---- ¡OFERTA DETECTADA! ----\"");
 
-                PriceHistory history = new PriceHistory();
-                history.setProductId(event.getProductId());
-                history.setProductName(event.getProductName());
-                history.setPrice(event.getPrice());
-                history.setPermalink(event.getPermalink());
-                history.setThumbnail(event.getThumbnail());
-                history.setTimestamp(new Date());
+                PriceHistory history = PriceHistory.builder()
+                        .productId(event.getProductId())
+                        .productName(event.getProductName())
+                        .price(event.getPrice())
+                        .timestamp(new Date(event.getTimestamp()))
+                        .permalink(event.getPermalink())
+                        .thumbnail(event.getThumbnail())
+                        .build();
 
                 priceRepository.save(history);
 

@@ -1,6 +1,8 @@
 package com.monitoreo.service;
 
 import com.monitoreo.model.dto.PriceEvent;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,6 +11,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * PriceProducer es responsable de escanear el mercado de laptops, simular volatilidad en los precios y enviar eventos a Kafka.
+ * Utiliza RestTemplate para obtener datos de una API externa y KafkaTemplate para publicar eventos en un tópico específico.
+ */
 @Service
 @Slf4j
 public class PriceProducer {
@@ -21,7 +27,12 @@ public class PriceProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Scheduled(fixedRate = 6000)
+
+    /**
+     * Método programado para ejecutarse cierto tiempo. Escanea el mercado de laptops, simula volatilidad en los precios y envía eventos a Kafka.
+     * Se limita a procesar los primeros 5 productos para evitar sobrecargar el sistema.
+     */
+    @Scheduled(fixedRate = 600000)
     public void fetchAndSimulateVolatility() {
         log.info("Escaneando mercado...");
 
@@ -36,7 +47,7 @@ public class PriceProducer {
                     double basePrice = Double.parseDouble(item.get("price").toString());
 
                     // se simula un movimiento en los precios porque los precios de la api son estaticos, se le aplica un 10% de variacion
-                    //  permite que el promedio en redis se mueva y genere ofertas reales
+                    // permite que el promedio en redis se mueva y genere ofertas reales
                     double simulatedPrice = basePrice * (0.90 + (Math.random() * 0.20));
 
                     PriceEvent event = new PriceEvent(
