@@ -13,10 +13,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.mockito.Mockito.mock;
 
@@ -38,6 +40,12 @@ import static org.mockito.Mockito.mock;
         "spring.data.redis.port=0"
 })
 class MonitoreoApplicationTests {
+
+    @MockitoBean
+    private StringRedisTemplate redisTemplate;
+
+    @MockitoBean
+    private PriceRepository priceRepository;
 
     @Test
     void contextLoads() {
