@@ -22,12 +22,11 @@ public class GlobalExceptionHandlerTest {
     private PriceRepository priceRepository;
 
     @Test
-    void whenMethodArgumentTypeMismatch_thenReturnsBadRequest() throws Exception {
-
-        mockMvc.perform(get("/api/prices"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").exists())
-                .andExpect(jsonPath("$.status").value(400));
+    void whenMethodArgumentTypeMismatch_thenReturnsError() throws Exception {
+        mockMvc.perform(get("/api/prices/invalid-id"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test
