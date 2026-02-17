@@ -41,11 +41,11 @@ import static org.mockito.Mockito.mock;
 })
 class MonitoreoApplicationTests {
 
-    @MockitoBean
-    private StringRedisTemplate redisTemplate;
+    @MockitoBean(name = "stringRedisTemplate")
+    private StringRedisTemplate stringRedisTemplate;
 
-    @MockitoBean
-    private PriceRepository priceRepository;
+    @MockitoBean(name = "redisTemplate")
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Test
     void contextLoads() {
