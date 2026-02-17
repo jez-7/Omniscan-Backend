@@ -21,7 +21,7 @@ public class PriceProducer {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String TOPIC = "prices-topic";
+    private static final String topic = "prices-topic";
 
     public PriceProducer(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
@@ -62,7 +62,7 @@ public class PriceProducer {
                     log.info("Precio detectado para {}: ${}",
                             event.getProductName(), String.format("%.2f", event.getPrice()));
 
-                    kafkaTemplate.send(TOPIC, event.getProductId(), event);
+                    kafkaTemplate.send(topic, event.getProductId(), event);
                 });
             }
         } catch (Exception e) {

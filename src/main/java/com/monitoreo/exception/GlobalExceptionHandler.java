@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorMessage> NoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorMessage> noHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
         String detail = String.format("No se encontró un endpoint para la ruta '%s'", ex.getRequestURL());
         ErrorMessage error = ErrorMessage.builder()
                 .message(detail)
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
                 .timeStamp(LocalDateTime.now())
                 .path(request.getRequestURI())
                 .build();
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 
     }
 

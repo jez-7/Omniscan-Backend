@@ -3,8 +3,6 @@ package com.monitoreo.controller;
 import com.monitoreo.model.entity.PriceHistory;
 import com.monitoreo.repository.PriceRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -18,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PriceController.class)
-public class PriceControllerTest {
+class PriceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

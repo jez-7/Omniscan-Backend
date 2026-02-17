@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PriceConsumerTest {
+class PriceConsumerTest {
 
     @Mock
     private StringRedisTemplate redisTemplate;

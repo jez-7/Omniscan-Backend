@@ -20,10 +20,10 @@ public class NotificationService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${telegram.bot.token}")
-    private String BOT_TOKEN;
+    private String botToken;
 
     @Value("${telegram.chat.id}")
-    private String CHAT_ID;
+    private String chatId;
 
     /**
      * Envía una alerta a Telegram con los detalles del producto que ha bajado de precio.
@@ -43,7 +43,7 @@ public class NotificationService {
 
         String url = String.format(
                 "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=Markdown",
-                BOT_TOKEN, CHAT_ID, text
+                botToken, chatId, text
         );
 
         try {
