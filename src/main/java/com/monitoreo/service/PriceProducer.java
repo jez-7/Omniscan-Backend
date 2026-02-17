@@ -18,12 +18,13 @@ import java.util.Map;
 public class PriceProducer {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private static final String topic = "prices-topic";
 
-    public PriceProducer(KafkaTemplate<String, Object> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+        public PriceProducer(KafkaTemplate<String, Object> kafkaTemplate, RestTemplate restTemplate) {
+            this.kafkaTemplate = kafkaTemplate;
+            this.restTemplate = restTemplate;
+        }
 
 
     /**
