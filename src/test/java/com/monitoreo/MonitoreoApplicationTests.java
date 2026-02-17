@@ -15,21 +15,12 @@ import org.springframework.test.context.TestPropertySource;
 
 
 @SpringBootTest
-@EmbeddedKafka(
-        partitions = 1,
-        brokerProperties = {
-                "listeners=PLAINTEXT://localhost:9092",
-                "port=9092",
-                "listener.security.protocol.map=PLAINTEXT:PLAINTEXT"
-        }
-)
+@EmbeddedKafka(partitions = 1)
 @ImportAutoConfiguration(exclude = {
-        MongoAutoConfiguration.class,
-        DataMongoAutoConfiguration.class,
-
-        DataRedisAutoConfiguration.class,
-        DataRedisRepositoriesAutoConfiguration.class,
-
+        org.springframework.boot.mongodb.autoconfigure.MongoAutoConfiguration.class,
+        org.springframework.boot.data.mongodb.autoconfigure.DataMongoAutoConfiguration.class,
+        org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration.class,
+        org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration.class
 })
 @TestPropertySource(properties = {
         "spring.main.lazy-initialization=true",
