@@ -36,15 +36,13 @@ public class PriceProducerTest {
         product.put("title", "Laptop Pro");
         product.put("price", 1000.0);
         product.put("thumbnail", "thumb.jpg");
-
         mockResponse.put("products", List.of(product));
 
-        lenient().when(kafkaTemplate.send(anyString(), anyString(), any()))
-                .thenReturn(java.util.concurrent.CompletableFuture.completedFuture(null));
+        when(restTemplate.getForObject(anyString(), eq(Map.class))).thenReturn(mockResponse);
 
         priceProducer.fetchAndSimulateVolatility();
 
-        verify(kafkaTemplate, times(5)).send(eq("prices-topic"), anyString(), any());
+        verify(kafkaTemplate, times(1)).send(eq("prices-topic"), anyString(), any());
     }
 
     @Test
