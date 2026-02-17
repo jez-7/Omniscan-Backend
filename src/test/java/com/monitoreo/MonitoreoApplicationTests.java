@@ -1,13 +1,19 @@
 package com.monitoreo;
 
+import com.monitoreo.repository.PriceRepository;
+import com.monitoreo.service.PriceConsumer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.TestPropertySource;
@@ -22,6 +28,8 @@ import static org.mockito.Mockito.mock;
         org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration.class,
         org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration.class
 })
+@EnableMongoRepositories(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = PriceRepository.class))
+@EnableRedisRepositories(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = PriceConsumer.class))
 @TestPropertySource(properties = {
         "spring.main.lazy-initialization=true",
         "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
