@@ -12,9 +12,16 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import static org.mockito.Mockito.mock;
 
 
-@SpringBootTest(properties = {
-        "spring.kafka.bootstrap-servers=localhost:9092"
-})
+@SpringBootTest(
+        properties = {
+                "spring.autoconfigure.exclude=" +
+                        "org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
+        }
+)
 class MonitoreoApplicationTests {
 
     @TestConfiguration
