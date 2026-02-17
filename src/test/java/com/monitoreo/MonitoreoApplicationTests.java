@@ -7,14 +7,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import static org.mockito.Mockito.mock;
 
 
-@SpringBootTest
-@EmbeddedKafka(partitions = 1, brokerProperties = {
-        "listeners=PLAINTEXT://localhost:9092",
-        "port=9092"
+@SpringBootTest(properties = {
+        "spring.kafka.bootstrap-servers=localhost:9092"
 })
 class MonitoreoApplicationTests {
 
@@ -31,6 +30,12 @@ class MonitoreoApplicationTests {
         @Primary
         public RedisTemplate<String, Object> redisTemplate() {
             return mock(RedisTemplate.class);
+        }
+
+        @Bean
+        @Primary
+        public KafkaTemplate<String, Object> kafkaTemplate() {
+            return mock(KafkaTemplate.class);
         }
     }
 
