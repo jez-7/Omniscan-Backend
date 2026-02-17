@@ -14,33 +14,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.redis.core.RedisTemplate;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.kafka.core.KafkaTemplate;
+
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.mockito.Mockito.mock;
-
-@SpringBootTest
-@EmbeddedKafka(partitions = 1)
-@EnableAutoConfiguration(exclude = {
-        MongoAutoConfiguration.class,
-        DataMongoAutoConfiguration.class,
-        DataRedisAutoConfiguration.class,
-        DataRedisAutoConfiguration.class,
-        KafkaAutoConfiguration.class
-})
-@TestPropertySource(properties = {
-        "spring.main.lazy-initialization=true",
-        "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
-        "spring.kafka.admin.auto-create=false",
-        "spring.data.mongodb.port=0",
-        "spring.data.redis.port=0"
-})
+@SpringBootTest(
+        properties = {
+                "spring.autoconfigure.exclude=" +
+                        "org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration," +
+                        "org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration",
+                "spring.main.lazy-initialization=true"
+        }
+)
 @Import(MonitoreoApplicationTests.Config.class)
 class MonitoreoApplicationTests {
 
