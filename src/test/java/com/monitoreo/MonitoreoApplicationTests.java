@@ -1,6 +1,9 @@
 package com.monitoreo;
 
 import com.monitoreo.repository.PriceRepository;
+import com.monitoreo.service.NotificationService;
+import com.monitoreo.service.PriceConsumer;
+import com.monitoreo.service.PriceProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,25 +13,28 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest(
         properties = {
                 "spring.autoconfigure.exclude=" +
-                        "org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration," +
-                        "org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration," +
-                        "org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration," +
-                        "org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration," +
-                        "org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration",
+                        "org.springframework.boot.mongodb.autoconfigure.MongoAutoConfiguration," +
+                        "org.springframework.boot.data.mongodb.autoconfigure.DataMongoAutoConfiguration," +
+                        "org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration," +
+                        "org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration," +
+                        "org.springframework.boot.kafka.autoconfigure.KafkaAutoConfiguration",
                 "spring.main.lazy-initialization=true"
         }
 )
 
 class MonitoreoApplicationTests {
 
-    @MockitoBean
-    PriceRepository priceRepository;
+    @MockitoBean PriceRepository priceRepository;
+    @MockitoBean MongoTemplate mongoTemplate;
+    @MockitoBean StringRedisTemplate stringRedisTemplate;
+
 
     @MockitoBean
-    MongoTemplate mongoTemplate;
-
+    PriceProducer priceProducer;
     @MockitoBean
-    StringRedisTemplate stringRedisTemplate;
+    PriceConsumer priceConsumer;
+    @MockitoBean
+    NotificationService notificationService;
 
     @Test
     void contextLoads() {
