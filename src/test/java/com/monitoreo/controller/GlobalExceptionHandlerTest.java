@@ -5,14 +5,19 @@ import com.monitoreo.repository.PriceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(GlobalExceptionHandler.class)
+@WebMvcTest(PriceController.class)
 class GlobalExceptionHandlerTest {
 
     @Autowired
@@ -22,11 +27,36 @@ class GlobalExceptionHandlerTest {
     private PriceRepository priceRepository;
 
     @Test
-    void whenMethodArgumentTypeMismatch_thenReturnsError() throws Exception {
-        mockMvc.perform(get("/api/prices/invalid-id"))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.status").value(500))
-                .andExpect(jsonPath("$.message").exists());
+    void whenTypeMismatch_thenReturnsBadRequest() {
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+
+        MethodArgumentTypeMismatchException ex = mock(MethodArgumentTypeMismatchException.class);
+        when(ex.getValue()).thenReturn("abc");
+        when(ex.getName()).thenReturn("id");
+
+        var request = mock(jakarta.servlet.http.HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/api/prices");
+
+        var response = handler.handleTypeMismatch(ex, request);
+
+        assertEquals(400, response.getBody().getStatus());
+        assertTrue(response.getBody().getMessage().contains("abc"));
+        assertTrue(response.getBody().getMessage().contains("id"));
+    }
+
+    @Test
+    void testNoHandlerFoundExceptionDirectly() {
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        var ex = mock(org.springframework.web.servlet.NoHandlerFoundException.class);
+        var request = mock(jakarta.servlet.http.HttpServletRequest.class);
+
+        when(ex.getRequestURL()).thenReturn("/api/unknown");
+        when(request.getRequestURI()).thenReturn("/api/unknown");
+
+        var response = handler.noHandlerFoundException(ex, request);
+
+        assertEquals(404, response.getBody().getStatus());
+        assertTrue(response.getBody().getMessage().contains("/api/unknown"));
     }
 
     @Test
