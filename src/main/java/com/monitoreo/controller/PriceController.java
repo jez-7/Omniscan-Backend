@@ -25,7 +25,7 @@ public class PriceController {
         return priceRepository.findAll();
     }
 
-    @Operation(summary = "Obtener ofertas por producto", description = "Devuelve una lista con el historial de ofertas detectadas para un producto específico")
+    @Operation(summary = "Obtener ofertas por producto", description = "Devuelve una lista con el historial de ofertas detectadas para un producto en específico")
     @GetMapping(value = "/{productId}")
     public List<PriceHistory> getPricesByProduct(@PathVariable String productId) {
         return priceRepository.findAll().stream()
