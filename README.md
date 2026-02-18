@@ -1,5 +1,4 @@
-🚀 Omniscan:
-Omniscan es un motor de monitoreo de precios de alta frecuencia diseñado bajo una arquitectura Event-Driven. El sistema escanea productos en tiempo real, analiza fluctuaciones mediante ventanas deslizantes y notifica ofertas críticas directamente a un Bot de Telegram.
+🚀 Omniscan es un motor de monitoreo de precios de alta frecuencia diseñado bajo una arquitectura Event-Driven. El sistema escanea productos en tiempo real, analiza fluctuaciones mediante ventanas deslizantes y notifica ofertas críticas directamente a un Bot de Telegram.
 
 🛠️ Stack Tecnológico Evolucionado
 - Java 21 & Spring Boot 4: Uso de Virtual Threads (Project Loom) para manejar cientos de procesos de I/O (escaneo y notificaciones) sin bloquear el sistema.
