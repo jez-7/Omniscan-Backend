@@ -9,8 +9,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,7 +30,6 @@ class GlobalExceptionHandlerTest {
         GlobalExceptionHandler handler = new GlobalExceptionHandler();
 
         MethodArgumentTypeMismatchException ex = mock(MethodArgumentTypeMismatchException.class);
-        when(ex.getValue()).thenReturn("abc");
         when(ex.getName()).thenReturn("id");
 
         var request = mock(jakarta.servlet.http.HttpServletRequest.class);
@@ -40,8 +38,15 @@ class GlobalExceptionHandlerTest {
         var response = handler.handleTypeMismatch(ex, request);
 
         assertEquals(400, response.getBody().getStatus());
-        assertTrue(response.getBody().getMessage().contains("abc"));
+        assertEquals("/api/prices", response.getBody().getPath());
+
+
         assertTrue(response.getBody().getMessage().contains("id"));
+
+        assertFalse(response.getBody().getMessage().contains("abc"),
+                "El mensaje de error no debe reflejar el valor de entrada para prevenir XSS");
+
+        assertTrue(response.getBody().getMessage().contains("formato incorrecto"));
     }
 
     @Test
