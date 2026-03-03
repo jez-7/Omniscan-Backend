@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -31,10 +32,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorMessage> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        String detail = String.format("El valor '%s' no es válido para el parámetro '%s'", ex.getValue(), ex.getName());
+        String detail = String.format("El parámetro '%s' tiene un formato incorrecto.", ex.getName());
 
         ErrorMessage error = ErrorMessage.builder()
                 .message(detail)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .timeStamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    //  captura errores de validación de Beans
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessage> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+
+        String detail = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+
+        ErrorMessage error = ErrorMessage.builder()
+                .message("Datos de entrada inválidos: " + detail)
                 .status(HttpStatus.BAD_REQUEST.value())
                 .timeStamp(LocalDateTime.now())
                 .path(request.getRequestURI())

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1)
-public class KafkaConfigTest {
+class KafkaConfigTest {
     @Autowired
     private ApplicationContext context;
 
