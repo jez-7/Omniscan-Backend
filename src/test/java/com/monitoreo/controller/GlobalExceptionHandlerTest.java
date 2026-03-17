@@ -1,10 +1,15 @@
 package com.monitoreo.controller;
 
 import com.monitoreo.exception.GlobalExceptionHandler;
+import com.monitoreo.model.dto.ErrorMessage;
 import com.monitoreo.repository.PriceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -73,6 +78,42 @@ class GlobalExceptionHandlerTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
                 .andExpect(jsonPath("$.message").value("Ocurrió un error interno. Por favor, intente de nuevo más tarde."));
+    }
+
+    @Test
+    void whenGenericException_thenReturnsInternalServerError() {
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        var request = mock(jakarta.servlet.http.HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/api/test");
+
+        ResponseEntity<ErrorMessage> response = handler.handleGeneric(
+                new RuntimeException("Something went wrong"), request);
+
+        assertEquals(500, response.getBody().getStatus());
+        assertEquals("/api/test", response.getBody().getPath());
+        assertNotNull(response.getBody().getTimeStamp());
+        assertTrue(response.getBody().getMessage().contains("error interno"));
+    }
+
+    @Test
+    void whenValidationError_thenReturnsBadRequest() {
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        var request = mock(jakarta.servlet.http.HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/api/prices");
+
+        // Create a MethodArgumentNotValidException with a field error
+        Object target = new Object();
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(target, "target");
+        bindingResult.addError(new FieldError("target", "price", "El precio no puede ser negativo"));
+
+        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
+
+        ResponseEntity<ErrorMessage> response = handler.handleValidationErrors(ex, request);
+
+        assertEquals(400, response.getBody().getStatus());
+        assertEquals("/api/prices", response.getBody().getPath());
+        assertTrue(response.getBody().getMessage().contains("El precio no puede ser negativo"));
+        assertTrue(response.getBody().getMessage().contains("Datos de entrada inválidos"));
     }
 
 }
