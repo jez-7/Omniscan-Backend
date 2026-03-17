@@ -31,7 +31,7 @@ public class PriceProducer {
      * Método programado para ejecutarse cierto tiempo. Escanea el mercado de laptops, simula volatilidad en los precios y envía eventos a Kafka.
      * Se limita a procesar los primeros 5 productos para evitar sobrecargar el sistema.
      */
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 10000)
     public void fetchAndSimulateVolatility() {
         log.info("Escaneando mercado...");
 
