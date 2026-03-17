@@ -20,11 +20,11 @@ class NotificationServiceTest {
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
         ReflectionTestUtils.setField(service, "restTemplate", mockRestTemplate);
         ReflectionTestUtils.setField(service, "botToken", "fake-token");
-        ReflectionTestUtils.setField(service, "chatId", "12345");
+
 
         when(mockRestTemplate.getForObject(anyString(), eq(String.class))).thenReturn("ok");
 
-        service.sendTelegramAlert("Laptop Pro", 999.99, "https://example.com/product/1");
+        service.sendTelegramAlert(7840114804L, "Laptop Pro", 999.99, "https://example.com/product/1");
 
         verify(mockRestTemplate, times(1)).getForObject(anyString(), eq(String.class));
     }
@@ -41,7 +41,7 @@ class NotificationServiceTest {
         when(mockRestTemplate.getForObject(anyString(), eq(String.class)))
                 .thenThrow(new RuntimeException("Connection refused"));
 
-        service.sendTelegramAlert("Laptop Pro", 999.99, "https://example.com/product/1");
+        service.sendTelegramAlert(7840114804L, "Laptop Pro", 999.99, "https://example.com/product/1");
 
         verify(mockRestTemplate, times(1)).getForObject(anyString(), eq(String.class));
     }

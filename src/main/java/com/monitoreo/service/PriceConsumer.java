@@ -2,7 +2,9 @@ package com.monitoreo.service;
 
 import com.monitoreo.model.dto.PriceEvent;
 import com.monitoreo.model.entity.PriceHistory;
+import com.monitoreo.model.entity.Subscription;
 import com.monitoreo.repository.PriceRepository;
+import com.monitoreo.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -25,6 +27,8 @@ public class PriceConsumer {
     private final PriceRepository priceRepository;
 
     private final NotificationService notificationService;
+
+    private final SubscriptionRepository subscriptionRepository;
 
     /**
      * Método que consume los eventos de precios desde el tópico de Kafka.
@@ -68,11 +72,22 @@ public class PriceConsumer {
 
                 priceRepository.save(history);
 
-                notificationService.sendTelegramAlert(
-                        event.getProductName(),
-                        event.getPrice(),
-                        event.getPermalink()
-                );
+                List<Subscription> allSubscriptions = subscriptionRepository.findAll();
+
+                for (Subscription sub : allSubscriptions) {
+
+                    if (event.getProductName().toLowerCase().contains(sub.getKeyword().toLowerCase())) {
+
+                        log.info("avisando al usuario {} sobre la oferta de {}", sub.getChatId(), event.getProductName());
+
+                        notificationService.sendTelegramAlert(
+                                sub.getChatId(),
+                                event.getProductName(),
+                                event.getPrice(),
+                                event.getPermalink()
+                        );
+                    }
+                }
             }
         }
     }

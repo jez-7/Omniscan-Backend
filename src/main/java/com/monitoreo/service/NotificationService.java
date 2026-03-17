@@ -22,17 +22,15 @@ public class NotificationService {
     @Value("${telegram.bot.token}")
     private String botToken;
 
-    @Value("${telegram.chat.id}")
-    private String chatId;
-
     /**
      * Envía una alerta a Telegram con los detalles del producto que ha bajado de precio.
      *
      * @param productName Nombre del producto.
      * @param price       Precio actual del producto.
      * @param link        Enlace al producto en la tienda.
+     * @param
      */
-    public void sendTelegramAlert(String productName, Double price, String link) {
+    public void sendTelegramAlert(Long chatId, String productName, Double price, String link) {
         String text = String.format(
                 "🚀 *¡OFERTA DETECTADA!* 🚀\n\n" +
                         "📦 *Producto:* %s\n" +
@@ -48,12 +46,9 @@ public class NotificationService {
 
         try {
             restTemplate.getForObject(url, String.class);
-            log.info("Notificación enviada a Telegram para el producto: {}", productName);
+            log.info("Notificación enviada al chat {} para el producto: {}", chatId, productName);
         } catch (Exception e) {
             log.error("Error al enviar notificación a Telegram: {}", e.getMessage());
         }
-
-
     }
-
 }
