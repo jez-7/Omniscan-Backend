@@ -19,6 +19,15 @@ class KafkaConfigTest {
     @Autowired
     private ApplicationContext context;
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.monitoreo.repository.PriceRepository priceRepository;
+
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.monitoreo.repository.SubscriptionRepository subscriptionRepository;
+
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
+
     @Test
     void testBeansAreRegistered() {
         NewTopic priceTopic = context.getBean(NewTopic.class);

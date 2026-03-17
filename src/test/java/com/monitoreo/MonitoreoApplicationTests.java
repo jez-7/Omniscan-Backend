@@ -27,6 +27,7 @@ class MonitoreoApplicationTests {
     @MockitoBean PriceRepository priceRepository;
     @MockitoBean MongoTemplate mongoTemplate;
     @MockitoBean StringRedisTemplate stringRedisTemplate;
+    @MockitoBean com.monitoreo.repository.SubscriptionRepository subscriptionRepository;
 
 
     @MockitoBean
