@@ -37,6 +37,9 @@ class KafkaConfigTest {
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     org.springframework.data.mongodb.core.convert.MongoConverter mongoConverter;
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    org.springframework.data.redis.core.StringRedisTemplate stringRedisTemplate;
+
     @Test
     void testBeansAreRegistered() {
         NewTopic priceTopic = context.getBean(NewTopic.class);
