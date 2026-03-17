@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -13,32 +14,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@SpringBootTest
+@SpringBootTest(
+        properties = {
+                "spring.autoconfigure.exclude=" +
+                        "org.springframework.boot.mongodb.autoconfigure.MongoAutoConfiguration," +
+                        "org.springframework.boot.data.mongodb.autoconfigure.DataMongoAutoConfiguration," +
+                        "org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration," +
+                        "org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration"
+        }
+)
 @EmbeddedKafka(partitions = 1)
 class KafkaConfigTest {
     @Autowired
     private ApplicationContext context;
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    @MockitoBean
     com.monitoreo.repository.PriceRepository priceRepository;
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    @MockitoBean
     com.monitoreo.repository.SubscriptionRepository subscriptionRepository;
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    @MockitoBean
     org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    @MockitoBean
     org.telegram.telegrambots.meta.TelegramBotsApi telegramBotsApi;
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    @MockitoBean
     com.monitoreo.bot.OmniscanTelegramBot omniscanTelegramBot;
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
-    org.springframework.data.mongodb.core.convert.MongoConverter mongoConverter;
-
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    @MockitoBean
     org.springframework.data.redis.core.StringRedisTemplate stringRedisTemplate;
+
+    @MockitoBean
+    com.monitoreo.service.NotificationService notificationService;
 
     @Test
     void testBeansAreRegistered() {

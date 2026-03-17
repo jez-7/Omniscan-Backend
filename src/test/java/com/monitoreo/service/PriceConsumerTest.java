@@ -13,8 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,9 +48,8 @@ class PriceConsumerTest {
 
         verify(priceRepository, times(1)).save(any(PriceHistory.class));
 
-        verify(notificationService, times(1)).sendTelegramAlert(anyString(), anyDouble(), anyString());
+        verify(notificationService, times(1)).sendTelegramAlert(anyString(), any(Double.class), anyString());
 
     }
-
 
 }
