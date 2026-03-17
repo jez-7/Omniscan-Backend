@@ -28,6 +28,12 @@ class KafkaConfigTest {
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    org.telegram.telegrambots.meta.TelegramBotsApi telegramBotsApi;
+
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    com.monitoreo.bot.OmniscanTelegramBot omniscanTelegramBot;
+
     @Test
     void testBeansAreRegistered() {
         NewTopic priceTopic = context.getBean(NewTopic.class);

@@ -28,6 +28,8 @@ class MonitoreoApplicationTests {
     @MockitoBean MongoTemplate mongoTemplate;
     @MockitoBean StringRedisTemplate stringRedisTemplate;
     @MockitoBean com.monitoreo.repository.SubscriptionRepository subscriptionRepository;
+    @MockitoBean org.telegram.telegrambots.meta.TelegramBotsApi telegramBotsApi;
+    @MockitoBean com.monitoreo.bot.OmniscanTelegramBot omniscanTelegramBot;
 
 
     @MockitoBean
