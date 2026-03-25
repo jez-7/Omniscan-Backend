@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface SubscriptionRepository extends MongoRepository<Subscription, String> {
     List<Subscription> findByChatId(Long chatId);
+    void deleteByChatIdAndKeyword(Long chatId, String keyword);
 }

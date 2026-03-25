@@ -54,6 +54,12 @@ public class OmniscanTelegramBot extends TelegramLongPollingBot {
 
             } else if (receivedMessage.equals("/start")) {
                 answer(chatId, "¡Hola! Soy OmniscanBot 🤖.\nEnviame `/track <producto>` para avisarte de las mejores ofertas.\nEjemplo: `/track asus vivobook`");
+            } else if (receivedMessage.startsWith("/untrack ")) {
+                String keyword = receivedMessage.substring(9).trim().toLowerCase();
+                subscriptionRepository.deleteByChatIdAndKeyword(chatId, keyword);
+
+                answer(chatId, "✅ Ya no enviaré más ofertas sobre el producto: *" + keyword + "*");
+                log.info("suscripción eliminada para el Chat: {}, producto  : {}", chatId, keyword);
             } else {
                 answer(chatId, "No entendí ese comando. Probá con `/track <producto>`.");
             }
