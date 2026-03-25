@@ -67,10 +67,14 @@ public class PriceProducer {
                     kafkaTemplate.send(TOPIC, event.getProductId(), event);
                     Thread.sleep(2000);
                 }
-            } catch (Exception e) {
+            } catch(InterruptedException ie){
+                log.error("El escaneo de '{}' fue interrumpido: {}", keyword, ie.getMessage());
+                Thread.currentThread().interrupt();
+            } catch(Exception e){
                 log.error("Error al escanear keyword '{}': {}", keyword, e.getMessage());
             }
         }
+
     }
 
     /**
