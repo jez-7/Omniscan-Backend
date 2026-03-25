@@ -43,7 +43,7 @@ public class PriceProducer {
     }
 
     /**
-     * Método programado que se ejecuta periódicamente.
+     * metodo programado que se ejecuta periódicamente.
      * Obtiene las keywords únicas de las suscripciones activas y busca productos
      * en HardGamers para cada una, enviando los eventos de precio a Kafka.
      */
@@ -85,9 +85,9 @@ public class PriceProducer {
      * Scrapea productos de HardGamers para una keyword específica.
      * Parsea el HTML de la página de resultados y extrae nombre, precio, link e imagen.
      *
-     * @param keyword Término de búsqueda (ej: "notebook", "placa de video", "ram 16gb")
+     * @param keyword Término de búsqueda
      * @return Lista de PriceEvent con los productos encontrados
-     * @throws IOException Si hay un error al conectar con HardGamers
+     * @throws IOException si hay un error al conectar con HardGamers
      */
     List<PriceEvent> scrapeProducts(String keyword) throws IOException {
         String url = BASE_URL + "/search?text=" + keyword;
