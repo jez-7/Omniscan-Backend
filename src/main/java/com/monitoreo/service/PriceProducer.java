@@ -65,6 +65,7 @@ public class PriceProducer {
                     log.info("Precio detectado para {}: ${}", event.getProductName(),
                             String.format("%.2f", event.getPrice()));
                     kafkaTemplate.send(TOPIC, event.getProductId(), event);
+                    Thread.sleep(2000);
                 }
             } catch (Exception e) {
                 log.error("Error al escanear keyword '{}': {}", keyword, e.getMessage());
@@ -90,7 +91,8 @@ public class PriceProducer {
      * @throws IOException si hay un error al conectar con HardGamers
      */
     List<PriceEvent> scrapeProducts(String keyword) throws IOException {
-        String url = BASE_URL + "/search?text=" + keyword;
+        String encodedKeyword = java.net.URLEncoder.encode(keyword, java.nio.charset.StandardCharsets.UTF_8);
+        String url = BASE_URL + "/search?text=" + encodedKeyword;
         log.info("Scrapeando HardGamers: '{}'", keyword);
 
         Document doc = fetchDocument(url);
