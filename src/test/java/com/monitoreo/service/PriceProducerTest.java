@@ -39,7 +39,7 @@ class PriceProducerTest {
 
     @BeforeEach
     void setUp() {
-        // @Value no se inyecta en tests unitarios puros → seteamos manualmente
+        // @Value is not injected in pure unit tests → set manually
         ReflectionTestUtils.setField(priceProducer, "resultsLimit", 5);
     }
 
@@ -98,7 +98,7 @@ class PriceProducerTest {
 
     @Test
     void testScanMarket_WithActiveSubscriptions() throws IOException {
-        // Usamos spy directo sobre el priceProducer que ya tiene mocks inyectados
+        // Use spy directly on the priceProducer that already has mocks injected
         PriceProducer spy = spy(priceProducer);
         Document doc = buildDocument("MLA123", "Notebook Lenovo", "450000", "CompraGamer");
         doReturn(doc).when(spy).fetchDocument(anyString());
@@ -160,7 +160,7 @@ class PriceProducerTest {
 
         spy.scanMarket();
 
-        // keyword duplicada → solo 1 llamada HTTP
+        // duplicate keyword → only 1 HTTP call
         verify(spy, times(1)).fetchDocument(anyString());
     }
 
@@ -175,7 +175,7 @@ class PriceProducerTest {
 
         spy.scanMarket();
 
-        // 2 keywords distintas → 2 llamadas HTTP
+        // 2 distinct keywords → 2 HTTP calls
         verify(spy, times(2)).fetchDocument(anyString());
         verify(kafkaTemplate, times(2)).send(eq("prices-topic"), anyString(), any(PriceEvent.class));
     }
@@ -280,7 +280,7 @@ class PriceProducerTest {
 
     @Test
     void testParseProductCard_FallbackPriceFromText() {
-        // content="" → debe intentar parsear el texto visible "150.000"
+        // content="" → should attempt to parse the visible text "150.000"
         String html = """
                 <html><body>
                 <article class="product">
@@ -301,7 +301,7 @@ class PriceProducerTest {
 
     @Test
     void testParseProductCard_IdFromFavouriteDiv() {
-        // Sin link itemprop=url → el ID viene del div.favourite
+        // No itemprop=url link → ID comes from the div.favourite
         String html = """
                 <html><body>
                 <article class="product">

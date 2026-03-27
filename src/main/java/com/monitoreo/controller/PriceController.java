@@ -14,18 +14,18 @@ import java.util.List;
 @RequestMapping("/api/prices")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@Tag(name = "Precios", description = "Endpoints para consultar el historial de ofertas detectadas")
+@Tag(name = "Prices", description = "Endpoints for querying the detected deals history")
 public class PriceController {
 
     private final PriceRepository priceRepository;
 
-    @Operation(summary = "Obtener todas las ofertas detectadas", description = "Devuelve una lista con el historial completo de ofertas detectadas")
+    @Operation(summary = "Get all detected deals", description = "Returns a list with the complete history of detected deals")
     @GetMapping
     public List<PriceHistory> getAllPrices() {
         return priceRepository.findAll();
     }
 
-    @Operation(summary = "Obtener ofertas por producto", description = "Devuelve una lista con el historial de ofertas detectadas para un producto en específico")
+    @Operation(summary = "Get deals by product", description = "Returns a list with the history of detected deals for a specific product")
     @GetMapping(value = "/{productId}")
     public List<PriceHistory> getPricesByProduct(@PathVariable String productId) {
         return priceRepository.findAll().stream()

@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Servicio encargado de procesar los eventos de precios recibidos desde Kafka.
- * Realiza el cálculo de promedios móviles usando Redis y determina si existe una oferta.
+ * Service responsible for processing price events received from Kafka.
+ * Calculates moving averages using Redis and determines whether a deal exists.
  */
 @Service
 @Slf4j
@@ -31,10 +31,10 @@ public class PriceConsumer {
     private final SubscriptionRepository subscriptionRepository;
 
     /**
-     * Método que consume los eventos de precios desde el tópico de Kafka.
-     * Almacena los precios en Redis para calcular el promedio móvil y detecta ofertas.
+     * Method that consumes price events from the Kafka topic.
+     * Stores prices in Redis to calculate the moving average and detects deals.
      *
-     * @param event El evento de precio recibido desde Kafka.
+     * @param event The price event received from Kafka.
      */
     @KafkaListener(topics = "prices-topic", groupId = "${spring.kafka.consumer.group-id}")
     public void consumePriceEvent(PriceEvent event) {
@@ -42,9 +42,9 @@ public class PriceConsumer {
         String redisKey = "product:window:" + event.getProductId();
 
         redisTemplate.opsForList().leftPush(redisKey, event.getPrice().toString());
-        redisTemplate.opsForList().trim(redisKey, 0, 9); // mantener solo los últimos 10 precios
+        redisTemplate.opsForList().trim(redisKey, 0, 9); // keep only the last 10 prices
 
-        // se obtiene todos los precios de la ventana y se calcula promedio
+        // retrieve all prices in the window and calculate the average
         List<String> prices = redisTemplate.opsForList().range(redisKey, 0, -1);
 
         if (prices != null && !prices.isEmpty()) {
@@ -54,12 +54,12 @@ public class PriceConsumer {
                     .average()
                     .orElse(0.0);
 
-            log.info("Item: {} | Actual: ${} | Promedio: ${}",
+            log.info("Item: {} | Current: ${} | Average: ${}",
                     event.getProductName(), event.getPrice(), String.format("%.2f", average));
 
-            // si el precio es un 5% menor al promedio se guarda en db
+            // if the price is 5% below the average, save it to the database
             if (event.getPrice() < (average * 0.95)) {
-                log.info(" ---- ¡OFERTA DETECTADA! ----\"");
+                log.info(" ---- DEAL DETECTED! ----");
 
                 PriceHistory history = PriceHistory.builder()
                         .productId(event.getProductId())
@@ -78,7 +78,7 @@ public class PriceConsumer {
 
                     if (event.getProductName().toLowerCase().contains(sub.getKeyword().toLowerCase())) {
 
-                        log.info("avisando al usuario {} sobre la oferta de {}", sub.getChatId(), event.getProductName());
+                        log.info("Notifying user {} about deal for {}", sub.getChatId(), event.getProductName());
 
                         notificationService.sendTelegramAlert(
                                 sub.getChatId(),

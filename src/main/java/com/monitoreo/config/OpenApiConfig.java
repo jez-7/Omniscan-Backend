@@ -14,9 +14,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Omniscan API - Sistema de Monitoreo de Precios")
+                        .title("Omniscan API - Price Monitoring System")
                         .version("1.0")
-                        .description("API diseñada para el escaneo automático de productos, análisis de volatilidad y detección de ofertas mediante arquitecturas orientadas a eventos.")
+                        .description("API designed for automated product scanning, volatility analysis, and deal detection using event-driven architecture.")
                         .contact(new Contact()
                                 .name("Emanuel Zamora")
                                 .url("https://github.com/jez-7")

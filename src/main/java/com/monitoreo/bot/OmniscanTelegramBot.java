@@ -39,7 +39,7 @@ public class OmniscanTelegramBot extends TelegramLongPollingBot {
 
 
             if (receivedMessage.startsWith("/track ")) {
-                // extrae todo lo que viene después de /track
+                // extract everything after /track
                 String keyword = receivedMessage.substring(7).trim().toLowerCase();
 
                 Subscription sub = Subscription.builder()
@@ -49,19 +49,19 @@ public class OmniscanTelegramBot extends TelegramLongPollingBot {
                         .build();
                 subscriptionRepository.save(sub);
 
-                answer(chatId, "✅ ¡Listo! Te avisaré cuando encuentre ofertas para: *" + keyword + "*");
-                log.info("Nueva suscripción de Chat ID {}: {}", chatId, keyword);
+                answer(chatId, "✅ Done! I will notify you when I find deals for: *" + keyword + "*");
+                log.info("New subscription from Chat ID {}: {}", chatId, keyword);
 
             } else if (receivedMessage.equals("/start")) {
-                answer(chatId, "¡Hola! Soy OmniscanBot 🤖.\nEnviame `/track <producto>` para avisarte de las mejores ofertas.\nEjemplo: `/track asus vivobook`");
+                answer(chatId, "Hello! I am OmniscanBot 🤖.\nSend me `/track <product>` to get notified about the best deals.\nExample: `/track asus vivobook`");
             } else if (receivedMessage.startsWith("/untrack ")) {
                 String keyword = receivedMessage.substring(9).trim().toLowerCase();
                 subscriptionRepository.deleteByChatIdAndKeyword(chatId, keyword);
 
-                answer(chatId, "✅ Ya no enviaré más ofertas sobre el producto: *" + keyword + "*");
-                log.info("suscripción eliminada para el Chat: {}, producto  : {}", chatId, keyword);
+                answer(chatId, "✅ I will no longer send deals for: *" + keyword + "*");
+                log.info("Subscription removed for Chat: {}, keyword: {}", chatId, keyword);
             } else {
-                answer(chatId, "No entendí ese comando. Probá con `/track <producto>`.");
+                answer(chatId, "I did not understand that command. Try `/track <product>`.");
             }
         }
     }
@@ -75,7 +75,7 @@ public class OmniscanTelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            log.error("Error al enviar mensaje a Telegram: ", e);
+            log.error("Error sending Telegram message: ", e);
         }
     }
 }

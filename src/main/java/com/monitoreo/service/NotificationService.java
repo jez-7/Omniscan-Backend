@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Servicio encargado de enviar notificaciones a Telegram cuando se detectan ofertas.
- * Utiliza la API de Telegram para enviar mensajes mediante un bot, formateados con detalles del producto.
+ * Service responsible for sending Telegram notifications when deals are detected.
+ * Uses the Telegram API to send messages via a bot, formatted with product details.
  */
 @Service
 @Slf4j
@@ -23,19 +23,19 @@ public class NotificationService {
     private String botToken;
 
     /**
-     * Envía una alerta a Telegram con los detalles del producto que ha bajado de precio.
+     * Sends a Telegram alert with details of the product that dropped in price.
      *
-     * @param productName Nombre del producto.
-     * @param price       Precio actual del producto.
-     * @param link        Enlace al producto en la tienda.
-     * @param
+     * @param chatId      Telegram chat ID to notify.
+     * @param productName Name of the product.
+     * @param price       Current price of the product.
+     * @param link        Link to the product in the store.
      */
     public void sendTelegramAlert(Long chatId, String productName, Double price, String link) {
         String text = String.format(
-                "🚀 *¡OFERTA DETECTADA!* 🚀\n\n" +
-                        "📦 *Producto:* %s\n" +
-                        "💰 *Precio:* $%.2f\n\n" +
-                        "🔗 [Ver en la tienda](%s)",
+                "🚀 *DEAL DETECTED!* 🚀\n\n" +
+                        "📦 *Product:* %s\n" +
+                        "💰 *Price:* $%.2f\n\n" +
+                        "🔗 [View in store](%s)",
                 productName, price, link
         );
 
@@ -46,9 +46,9 @@ public class NotificationService {
 
         try {
             restTemplate.getForObject(url, String.class);
-            log.info("Notificación enviada al chat {} para el producto: {}", chatId, productName);
+            log.info("Notification sent to chat {} for product: {}", chatId, productName);
         } catch (Exception e) {
-            log.error("Error al enviar notificación a Telegram: {}", e.getMessage());
+            log.error("Error sending Telegram notification: {}", e.getMessage());
         }
     }
 }

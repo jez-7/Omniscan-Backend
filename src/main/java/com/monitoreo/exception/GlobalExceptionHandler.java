@@ -19,10 +19,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleGeneric(Exception ex, HttpServletRequest request) {
-        log.error("Error interno no controlado: ", ex);
+        log.error("Unhandled internal error: ", ex);
 
         ErrorMessage error = ErrorMessage.builder()
-                .message("Ocurrió un error interno. Por favor, intente de nuevo más tarde.")
+                .message("An internal error occurred. Please try again later.")
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .timeStamp(LocalDateTime.now())
                 .path(request.getRequestURI())
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorMessage> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        String detail = String.format("El parámetro '%s' tiene un formato incorrecto.", ex.getName());
+        String detail = String.format("Parameter '%s' has an invalid format.", ex.getName());
 
         ErrorMessage error = ErrorMessage.builder()
                 .message(detail)
@@ -43,14 +43,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    //  captura errores de validación de Beans
+    //  captures Bean validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
         String detail = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
 
         ErrorMessage error = ErrorMessage.builder()
-                .message("Datos de entrada inválidos: " + detail)
+                .message("Invalid input data: " + detail)
                 .status(HttpStatus.BAD_REQUEST.value())
                 .timeStamp(LocalDateTime.now())
                 .path(request.getRequestURI())
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorMessage> noHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
-        String detail = String.format("No se encontró un endpoint para la ruta '%s'", ex.getRequestURL());
+        String detail = String.format("No endpoint found for path '%s'", ex.getRequestURL());
         ErrorMessage error = ErrorMessage.builder()
                 .message(detail)
                 .status(HttpStatus.NOT_FOUND.value())
