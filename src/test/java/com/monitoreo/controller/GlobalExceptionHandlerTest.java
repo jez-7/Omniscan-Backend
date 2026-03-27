@@ -49,9 +49,9 @@ class GlobalExceptionHandlerTest {
         assertTrue(response.getBody().getMessage().contains("id"));
 
         assertFalse(response.getBody().getMessage().contains("abc"),
-                "El mensaje de error no debe reflejar el valor de entrada para prevenir XSS");
+                "The error message must not reflect the input value to prevent XSS");
 
-        assertTrue(response.getBody().getMessage().contains("formato incorrecto"));
+        assertTrue(response.getBody().getMessage().contains("invalid format"));
     }
 
     @Test
@@ -77,7 +77,7 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/api/prices"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
-                .andExpect(jsonPath("$.message").value("Ocurrió un error interno. Por favor, intente de nuevo más tarde."));
+                .andExpect(jsonPath("$.message").value("An internal error occurred. Please try again later."));
     }
 
     @Test
@@ -92,7 +92,7 @@ class GlobalExceptionHandlerTest {
         assertEquals(500, response.getBody().getStatus());
         assertEquals("/api/test", response.getBody().getPath());
         assertNotNull(response.getBody().getTimeStamp());
-        assertTrue(response.getBody().getMessage().contains("error interno"));
+        assertTrue(response.getBody().getMessage().contains("internal error"));
     }
 
     @Test
@@ -113,7 +113,7 @@ class GlobalExceptionHandlerTest {
         assertEquals(400, response.getBody().getStatus());
         assertEquals("/api/prices", response.getBody().getPath());
         assertTrue(response.getBody().getMessage().contains("El precio no puede ser negativo"));
-        assertTrue(response.getBody().getMessage().contains("Datos de entrada inválidos"));
+        assertTrue(response.getBody().getMessage().contains("Invalid input data"));
     }
 
 }
